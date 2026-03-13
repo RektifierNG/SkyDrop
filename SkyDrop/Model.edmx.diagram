@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="2b493e7b5a0148ec98ea8e84b059e1b0" Name="Diagram1">
+        <EntityTypeShape EntityType="SkyDropModel.Dron" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SkyDropModel.Korisnik" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SkyDropModel.Narudzba" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SkyDropModel.Paket" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="SkyDropModel.Ruta" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="SkyDropModel.RutaPaket" Width="1.5" PointX="7.5" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="SkyDropModel.FK_Ruta_Dron" ManuallyRouted="false" />
+        <AssociationConnector Association="SkyDropModel.FK_Narudzba_Korisnik" ManuallyRouted="false" />
+        <AssociationConnector Association="SkyDropModel.FK_Paket_Narudzba" ManuallyRouted="false" />
+        <AssociationConnector Association="SkyDropModel.FK_RutaPaket_Paket" ManuallyRouted="false" />
+        <AssociationConnector Association="SkyDropModel.FK_RutaPaket_Ruta" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SkyDropModel.ObavljenaDostava" Width="1.5" PointX="9.75" PointY="1.25" />
+        <EntityTypeShape EntityType="SkyDropModel.Recenzija" Width="1.5" PointX="10.5" PointY="4" />
+        <AssociationConnector Association="SkyDropModel.FK_Recenzija_Korisnik" />
+        <AssociationConnector Association="SkyDropModel.FK_ObavljenaDostava_RutaPaket" />
+        <AssociationConnector Association="SkyDropModel.FK_Recenzija_Paket" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

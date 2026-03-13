@@ -1,0 +1,566 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="SkyDropModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Dron">
+          <Key>
+            <PropertyRef Name="DronId" />
+          </Key>
+          <Property Name="DronId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Model" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Korisnik">
+          <Key>
+            <PropertyRef Name="KorisnikId" />
+          </Key>
+          <Property Name="KorisnikId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Prezime" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DatumRodjenja" Type="date" />
+        </EntityType>
+        <EntityType Name="Narudzba">
+          <Key>
+            <PropertyRef Name="NarudzbaId" />
+          </Key>
+          <Property Name="NarudzbaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KorisnikId" Type="int" Nullable="false" />
+          <Property Name="Naziv" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DatumNarudzbe" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ObavljenaDostava">
+          <Key>
+            <PropertyRef Name="ObavljenaDostavaId" />
+          </Key>
+          <Property Name="ObavljenaDostavaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RutaPaketId" Type="int" Nullable="false" />
+          <Property Name="DatumVrijeme" Type="datetime" Nullable="false" />
+          <Property Name="Uspjesna" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Paket">
+          <Key>
+            <PropertyRef Name="PaketId" />
+          </Key>
+          <Property Name="PaketId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NarudzbaId" Type="int" Nullable="false" />
+          <Property Name="Naziv" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TezinaKg" Type="int" Nullable="false" />
+          <Property Name="TezinaG" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Recenzija">
+          <Key>
+            <PropertyRef Name="RecenzijaId" />
+          </Key>
+          <Property Name="RecenzijaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="KorisnikId" Type="int" Nullable="false" />
+          <Property Name="PaketId" Type="int" Nullable="false" />
+          <Property Name="DatumRecenzije" Type="datetime" Nullable="false" />
+          <Property Name="Ocjena" Type="int" Nullable="false" />
+          <Property Name="Komentar" Type="nvarchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="Ruta">
+          <Key>
+            <PropertyRef Name="RutaId" />
+          </Key>
+          <Property Name="RutaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DronId" Type="int" Nullable="false" />
+          <Property Name="Naziv" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="PlaniranPolazak" Type="datetime" Nullable="false" />
+          <Property Name="PlaniranPovratak" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RutaPaket">
+          <Key>
+            <PropertyRef Name="RutaPaketId" />
+          </Key>
+          <Property Name="RutaPaketId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RutaId" Type="int" Nullable="false" />
+          <Property Name="PaketId" Type="int" Nullable="false" />
+          <Property Name="Redoslijed" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Narudzba_Korisnik">
+          <End Role="Korisnik" Type="Self.Korisnik" Multiplicity="1" />
+          <End Role="Narudzba" Type="Self.Narudzba" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnik">
+              <PropertyRef Name="KorisnikId" />
+            </Principal>
+            <Dependent Role="Narudzba">
+              <PropertyRef Name="KorisnikId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObavljenaDostava_RutaPaket">
+          <End Role="RutaPaket" Type="Self.RutaPaket" Multiplicity="1" />
+          <End Role="ObavljenaDostava" Type="Self.ObavljenaDostava" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RutaPaket">
+              <PropertyRef Name="RutaPaketId" />
+            </Principal>
+            <Dependent Role="ObavljenaDostava">
+              <PropertyRef Name="RutaPaketId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Paket_Narudzba">
+          <End Role="Narudzba" Type="Self.Narudzba" Multiplicity="1" />
+          <End Role="Paket" Type="Self.Paket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Narudzba">
+              <PropertyRef Name="NarudzbaId" />
+            </Principal>
+            <Dependent Role="Paket">
+              <PropertyRef Name="NarudzbaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recenzija_Korisnik">
+          <End Role="Korisnik" Type="Self.Korisnik" Multiplicity="1" />
+          <End Role="Recenzija" Type="Self.Recenzija" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnik">
+              <PropertyRef Name="KorisnikId" />
+            </Principal>
+            <Dependent Role="Recenzija">
+              <PropertyRef Name="KorisnikId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recenzija_Paket">
+          <End Role="Paket" Type="Self.Paket" Multiplicity="1" />
+          <End Role="Recenzija" Type="Self.Recenzija" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paket">
+              <PropertyRef Name="PaketId" />
+            </Principal>
+            <Dependent Role="Recenzija">
+              <PropertyRef Name="PaketId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ruta_Dron">
+          <End Role="Dron" Type="Self.Dron" Multiplicity="1" />
+          <End Role="Ruta" Type="Self.Ruta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dron">
+              <PropertyRef Name="DronId" />
+            </Principal>
+            <Dependent Role="Ruta">
+              <PropertyRef Name="DronId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RutaPaket_Paket">
+          <End Role="Paket" Type="Self.Paket" Multiplicity="1" />
+          <End Role="RutaPaket" Type="Self.RutaPaket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paket">
+              <PropertyRef Name="PaketId" />
+            </Principal>
+            <Dependent Role="RutaPaket">
+              <PropertyRef Name="PaketId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RutaPaket_Ruta">
+          <End Role="Ruta" Type="Self.Ruta" Multiplicity="1" />
+          <End Role="RutaPaket" Type="Self.RutaPaket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ruta">
+              <PropertyRef Name="RutaId" />
+            </Principal>
+            <Dependent Role="RutaPaket">
+              <PropertyRef Name="RutaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SkyDropModelStoreContainer">
+          <EntitySet Name="Dron" EntityType="Self.Dron" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Korisnik" EntityType="Self.Korisnik" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Narudzba" EntityType="Self.Narudzba" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ObavljenaDostava" EntityType="Self.ObavljenaDostava" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Paket" EntityType="Self.Paket" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Recenzija" EntityType="Self.Recenzija" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ruta" EntityType="Self.Ruta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RutaPaket" EntityType="Self.RutaPaket" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Narudzba_Korisnik" Association="Self.FK_Narudzba_Korisnik">
+            <End Role="Korisnik" EntitySet="Korisnik" />
+            <End Role="Narudzba" EntitySet="Narudzba" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObavljenaDostava_RutaPaket" Association="Self.FK_ObavljenaDostava_RutaPaket">
+            <End Role="RutaPaket" EntitySet="RutaPaket" />
+            <End Role="ObavljenaDostava" EntitySet="ObavljenaDostava" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Paket_Narudzba" Association="Self.FK_Paket_Narudzba">
+            <End Role="Narudzba" EntitySet="Narudzba" />
+            <End Role="Paket" EntitySet="Paket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recenzija_Korisnik" Association="Self.FK_Recenzija_Korisnik">
+            <End Role="Korisnik" EntitySet="Korisnik" />
+            <End Role="Recenzija" EntitySet="Recenzija" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recenzija_Paket" Association="Self.FK_Recenzija_Paket">
+            <End Role="Paket" EntitySet="Paket" />
+            <End Role="Recenzija" EntitySet="Recenzija" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ruta_Dron" Association="Self.FK_Ruta_Dron">
+            <End Role="Dron" EntitySet="Dron" />
+            <End Role="Ruta" EntitySet="Ruta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RutaPaket_Paket" Association="Self.FK_RutaPaket_Paket">
+            <End Role="Paket" EntitySet="Paket" />
+            <End Role="RutaPaket" EntitySet="RutaPaket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RutaPaket_Ruta" Association="Self.FK_RutaPaket_Ruta">
+            <End Role="Ruta" EntitySet="Ruta" />
+            <End Role="RutaPaket" EntitySet="RutaPaket" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SkyDropModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Dron">
+          <Key>
+            <PropertyRef Name="DronId" />
+          </Key>
+          <Property Name="DronId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Model" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Ruta" Relationship="Self.FK_Ruta_Dron" FromRole="Dron" ToRole="Ruta" />
+        </EntityType>
+        <EntityType Name="Korisnik">
+          <Key>
+            <PropertyRef Name="KorisnikId" />
+          </Key>
+          <Property Name="KorisnikId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Prezime" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DatumRodjenja" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Narudzba" Relationship="Self.FK_Narudzba_Korisnik" FromRole="Korisnik" ToRole="Narudzba" />
+          <NavigationProperty Name="Recenzija" Relationship="SkyDropModel.FK_Recenzija_Korisnik" FromRole="Korisnik" ToRole="Recenzija" />
+        </EntityType>
+        <EntityType Name="Narudzba">
+          <Key>
+            <PropertyRef Name="NarudzbaId" />
+          </Key>
+          <Property Name="NarudzbaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KorisnikId" Type="Int32" Nullable="false" />
+          <Property Name="Naziv" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DatumNarudzbe" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Korisnik" Relationship="Self.FK_Narudzba_Korisnik" FromRole="Narudzba" ToRole="Korisnik" />
+          <NavigationProperty Name="Paket" Relationship="Self.FK_Paket_Narudzba" FromRole="Narudzba" ToRole="Paket" />
+        </EntityType>
+        <EntityType Name="Paket">
+          <Key>
+            <PropertyRef Name="PaketId" />
+          </Key>
+          <Property Name="PaketId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NarudzbaId" Type="Int32" Nullable="false" />
+          <Property Name="Naziv" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TezinaKg" Type="Int32" Nullable="false" />
+          <Property Name="TezinaG" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Narudzba" Relationship="Self.FK_Paket_Narudzba" FromRole="Paket" ToRole="Narudzba" />
+          <NavigationProperty Name="RutaPaket" Relationship="Self.FK_RutaPaket_Paket" FromRole="Paket" ToRole="RutaPaket" />
+          <NavigationProperty Name="Recenzija" Relationship="SkyDropModel.FK_Recenzija_Paket" FromRole="Paket" ToRole="Recenzija" />
+        </EntityType>
+        <EntityType Name="Ruta">
+          <Key>
+            <PropertyRef Name="RutaId" />
+          </Key>
+          <Property Name="RutaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DronId" Type="Int32" Nullable="false" />
+          <Property Name="Naziv" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PlaniranPolazak" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PlaniranPovratak" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Dron" Relationship="Self.FK_Ruta_Dron" FromRole="Ruta" ToRole="Dron" />
+          <NavigationProperty Name="RutaPaket" Relationship="Self.FK_RutaPaket_Ruta" FromRole="Ruta" ToRole="RutaPaket" />
+        </EntityType>
+        <EntityType Name="RutaPaket">
+          <Key>
+            <PropertyRef Name="RutaPaketId" />
+          </Key>
+          <Property Name="RutaPaketId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RutaId" Type="Int32" Nullable="false" />
+          <Property Name="PaketId" Type="Int32" Nullable="false" />
+          <Property Name="Redoslijed" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Paket" Relationship="Self.FK_RutaPaket_Paket" FromRole="RutaPaket" ToRole="Paket" />
+          <NavigationProperty Name="Ruta" Relationship="Self.FK_RutaPaket_Ruta" FromRole="RutaPaket" ToRole="Ruta" />
+          <NavigationProperty Name="ObavljenaDostava" Relationship="SkyDropModel.FK_ObavljenaDostava_RutaPaket" FromRole="RutaPaket" ToRole="ObavljenaDostava" />
+        </EntityType>
+        <Association Name="FK_Ruta_Dron">
+          <End Role="Dron" Type="Self.Dron" Multiplicity="1" />
+          <End Role="Ruta" Type="Self.Ruta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dron">
+              <PropertyRef Name="DronId" />
+            </Principal>
+            <Dependent Role="Ruta">
+              <PropertyRef Name="DronId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Narudzba_Korisnik">
+          <End Role="Korisnik" Type="Self.Korisnik" Multiplicity="1" />
+          <End Role="Narudzba" Type="Self.Narudzba" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnik">
+              <PropertyRef Name="KorisnikId" />
+            </Principal>
+            <Dependent Role="Narudzba">
+              <PropertyRef Name="KorisnikId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Paket_Narudzba">
+          <End Role="Narudzba" Type="Self.Narudzba" Multiplicity="1" />
+          <End Role="Paket" Type="Self.Paket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Narudzba">
+              <PropertyRef Name="NarudzbaId" />
+            </Principal>
+            <Dependent Role="Paket">
+              <PropertyRef Name="NarudzbaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RutaPaket_Paket">
+          <End Role="Paket" Type="Self.Paket" Multiplicity="1" />
+          <End Role="RutaPaket" Type="Self.RutaPaket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paket">
+              <PropertyRef Name="PaketId" />
+            </Principal>
+            <Dependent Role="RutaPaket">
+              <PropertyRef Name="PaketId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_RutaPaket_Ruta">
+          <End Role="Ruta" Type="Self.Ruta" Multiplicity="1" />
+          <End Role="RutaPaket" Type="Self.RutaPaket" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Ruta">
+              <PropertyRef Name="RutaId" />
+            </Principal>
+            <Dependent Role="RutaPaket">
+              <PropertyRef Name="RutaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SkyDropEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Dron" EntityType="Self.Dron" />
+          <EntitySet Name="Korisnik" EntityType="Self.Korisnik" />
+          <EntitySet Name="Narudzba" EntityType="Self.Narudzba" />
+          <EntitySet Name="Paket" EntityType="Self.Paket" />
+          <EntitySet Name="Ruta" EntityType="Self.Ruta" />
+          <EntitySet Name="RutaPaket" EntityType="Self.RutaPaket" />
+          <AssociationSet Name="FK_Ruta_Dron" Association="Self.FK_Ruta_Dron">
+            <End Role="Dron" EntitySet="Dron" />
+            <End Role="Ruta" EntitySet="Ruta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Narudzba_Korisnik" Association="Self.FK_Narudzba_Korisnik">
+            <End Role="Korisnik" EntitySet="Korisnik" />
+            <End Role="Narudzba" EntitySet="Narudzba" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Paket_Narudzba" Association="Self.FK_Paket_Narudzba">
+            <End Role="Narudzba" EntitySet="Narudzba" />
+            <End Role="Paket" EntitySet="Paket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RutaPaket_Paket" Association="Self.FK_RutaPaket_Paket">
+            <End Role="Paket" EntitySet="Paket" />
+            <End Role="RutaPaket" EntitySet="RutaPaket" />
+          </AssociationSet>
+          <AssociationSet Name="FK_RutaPaket_Ruta" Association="Self.FK_RutaPaket_Ruta">
+            <End Role="Ruta" EntitySet="Ruta" />
+            <End Role="RutaPaket" EntitySet="RutaPaket" />
+          </AssociationSet>
+          <EntitySet Name="ObavljenaDostava" EntityType="SkyDropModel.ObavljenaDostava" />
+          <EntitySet Name="Recenzija" EntityType="SkyDropModel.Recenzija" />
+          <AssociationSet Name="FK_Recenzija_Korisnik" Association="SkyDropModel.FK_Recenzija_Korisnik">
+            <End Role="Korisnik" EntitySet="Korisnik" />
+            <End Role="Recenzija" EntitySet="Recenzija" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ObavljenaDostava_RutaPaket" Association="SkyDropModel.FK_ObavljenaDostava_RutaPaket">
+            <End Role="RutaPaket" EntitySet="RutaPaket" />
+            <End Role="ObavljenaDostava" EntitySet="ObavljenaDostava" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Recenzija_Paket" Association="SkyDropModel.FK_Recenzija_Paket">
+            <End Role="Paket" EntitySet="Paket" />
+            <End Role="Recenzija" EntitySet="Recenzija" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ObavljenaDostava">
+          <Key>
+            <PropertyRef Name="ObavljenaDostavaId" />
+          </Key>
+          <Property Name="ObavljenaDostavaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RutaPaketId" Type="Int32" Nullable="false" />
+          <Property Name="DatumVrijeme" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Uspjesna" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="RutaPaket" Relationship="SkyDropModel.FK_ObavljenaDostava_RutaPaket" FromRole="ObavljenaDostava" ToRole="RutaPaket" />
+        </EntityType>
+        <EntityType Name="Recenzija">
+          <Key>
+            <PropertyRef Name="RecenzijaId" />
+          </Key>
+          <Property Name="RecenzijaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="KorisnikId" Type="Int32" Nullable="false" />
+          <Property Name="PaketId" Type="Int32" Nullable="false" />
+          <Property Name="DatumRecenzije" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Ocjena" Type="Int32" Nullable="false" />
+          <Property Name="Komentar" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Korisnik" Relationship="SkyDropModel.FK_Recenzija_Korisnik" FromRole="Recenzija" ToRole="Korisnik" />
+          <NavigationProperty Name="Paket" Relationship="SkyDropModel.FK_Recenzija_Paket" FromRole="Recenzija" ToRole="Paket" />
+        </EntityType>
+        <Association Name="FK_Recenzija_Korisnik">
+          <End Type="SkyDropModel.Korisnik" Role="Korisnik" Multiplicity="1" />
+          <End Type="SkyDropModel.Recenzija" Role="Recenzija" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Korisnik">
+              <PropertyRef Name="KorisnikId" />
+            </Principal>
+            <Dependent Role="Recenzija">
+              <PropertyRef Name="KorisnikId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ObavljenaDostava_RutaPaket">
+          <End Type="SkyDropModel.RutaPaket" Role="RutaPaket" Multiplicity="1" />
+          <End Type="SkyDropModel.ObavljenaDostava" Role="ObavljenaDostava" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RutaPaket">
+              <PropertyRef Name="RutaPaketId" />
+            </Principal>
+            <Dependent Role="ObavljenaDostava">
+              <PropertyRef Name="RutaPaketId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Recenzija_Paket">
+          <End Type="SkyDropModel.Paket" Role="Paket" Multiplicity="1" />
+          <End Type="SkyDropModel.Recenzija" Role="Recenzija" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Paket">
+              <PropertyRef Name="PaketId" />
+            </Principal>
+            <Dependent Role="Recenzija">
+              <PropertyRef Name="PaketId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SkyDropModelStoreContainer" CdmEntityContainer="SkyDropEntities">
+          <EntitySetMapping Name="Dron">
+            <EntityTypeMapping TypeName="SkyDropModel.Dron">
+              <MappingFragment StoreEntitySet="Dron">
+                <ScalarProperty Name="DronId" ColumnName="DronId" />
+                <ScalarProperty Name="Model" ColumnName="Model" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Korisnik">
+            <EntityTypeMapping TypeName="SkyDropModel.Korisnik">
+              <MappingFragment StoreEntitySet="Korisnik">
+                <ScalarProperty Name="KorisnikId" ColumnName="KorisnikId" />
+                <ScalarProperty Name="Ime" ColumnName="Ime" />
+                <ScalarProperty Name="Prezime" ColumnName="Prezime" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="DatumRodjenja" ColumnName="DatumRodjenja" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Narudzba">
+            <EntityTypeMapping TypeName="SkyDropModel.Narudzba">
+              <MappingFragment StoreEntitySet="Narudzba">
+                <ScalarProperty Name="NarudzbaId" ColumnName="NarudzbaId" />
+                <ScalarProperty Name="KorisnikId" ColumnName="KorisnikId" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="DatumNarudzbe" ColumnName="DatumNarudzbe" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Paket">
+            <EntityTypeMapping TypeName="SkyDropModel.Paket">
+              <MappingFragment StoreEntitySet="Paket">
+                <ScalarProperty Name="PaketId" ColumnName="PaketId" />
+                <ScalarProperty Name="NarudzbaId" ColumnName="NarudzbaId" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="TezinaKg" ColumnName="TezinaKg" />
+                <ScalarProperty Name="TezinaG" ColumnName="TezinaG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ruta">
+            <EntityTypeMapping TypeName="SkyDropModel.Ruta">
+              <MappingFragment StoreEntitySet="Ruta">
+                <ScalarProperty Name="RutaId" ColumnName="RutaId" />
+                <ScalarProperty Name="DronId" ColumnName="DronId" />
+                <ScalarProperty Name="Naziv" ColumnName="Naziv" />
+                <ScalarProperty Name="PlaniranPolazak" ColumnName="PlaniranPolazak" />
+                <ScalarProperty Name="PlaniranPovratak" ColumnName="PlaniranPovratak" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RutaPaket">
+            <EntityTypeMapping TypeName="SkyDropModel.RutaPaket">
+              <MappingFragment StoreEntitySet="RutaPaket">
+                <ScalarProperty Name="RutaPaketId" ColumnName="RutaPaketId" />
+                <ScalarProperty Name="RutaId" ColumnName="RutaId" />
+                <ScalarProperty Name="PaketId" ColumnName="PaketId" />
+                <ScalarProperty Name="Redoslijed" ColumnName="Redoslijed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ObavljenaDostava">
+            <EntityTypeMapping TypeName="SkyDropModel.ObavljenaDostava">
+              <MappingFragment StoreEntitySet="ObavljenaDostava">
+                <ScalarProperty Name="Uspjesna" ColumnName="Uspjesna" />
+                <ScalarProperty Name="DatumVrijeme" ColumnName="DatumVrijeme" />
+                <ScalarProperty Name="RutaPaketId" ColumnName="RutaPaketId" />
+                <ScalarProperty Name="ObavljenaDostavaId" ColumnName="ObavljenaDostavaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Recenzija">
+            <EntityTypeMapping TypeName="SkyDropModel.Recenzija">
+              <MappingFragment StoreEntitySet="Recenzija">
+                <ScalarProperty Name="Komentar" ColumnName="Komentar" />
+                <ScalarProperty Name="Ocjena" ColumnName="Ocjena" />
+                <ScalarProperty Name="DatumRecenzije" ColumnName="DatumRecenzije" />
+                <ScalarProperty Name="PaketId" ColumnName="PaketId" />
+                <ScalarProperty Name="KorisnikId" ColumnName="KorisnikId" />
+                <ScalarProperty Name="RecenzijaId" ColumnName="RecenzijaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
